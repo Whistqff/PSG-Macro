@@ -121,16 +121,20 @@ Return
 Perch() {
     OpenToLan()
     WaitLan(200)
-    Clipboard := "/data merge entity @e[type=ender_dragon,limit=1] {DragonPhase:2}"
-    Send, t^v{Enter}
+    Clipboard := "data merge entity @e[type=ender_dragon,limit=1] {DragonPhase:2}"
+    Send, /
+    Sleep, 70
+    Send, ^v{Enter}
     Return
 }
 
 DataList() {
     OpenToLan()
     WaitLan(100)
-    Clipboard := "/datapack list"
-    Send, t^v{Enter}
+    Clipboard := "datapack list"
+    Send, /
+    Sleep, 70
+    Send, ^v{Enter}
     Return
 }
 
