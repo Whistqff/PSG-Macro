@@ -1,5 +1,7 @@
 ; PSG MACRO by fiki, edited by Whistqff(will become obsolete when fiki fixes his version)
 ; PauseOnLoad and ShowF3 might not work on different languages
+#NoEnv
+#SingleInstance, Force
 
 global savesDir := "D:/MCSR/MultiMC/instances/1.16.1inst1/.minecraft/saves" ; Where your saves is
 global oldWorlds := "D:/OldWorlds/PSG" ; Where old worlds will be placed
@@ -9,6 +11,12 @@ global f3Dur := "100" ; How long f3 is shown in miliseconds
 
 IfNotExist, resets.txt
     FileAppend, 0, resets.txt
+
+IfNotExist, %A_ScriptDir%/PerfectWorld
+    MsgBox, Please extract the PSG.zip in the same directory as this script and rename it to "PerfectWorld"
+
+IfNotExist, %oldWorlds%
+    FileCreateDir, %oldWorlds%
 
 WorldCopy() {
     FileRead, worldVar, resets.txt
@@ -43,6 +51,7 @@ Reset() {
         PauseOnLoad()
     If (showf3)
         Showf3()
+Return
 }
 
 ExperimentalSettings() {
@@ -54,6 +63,7 @@ ExperimentalSettings() {
         Else
             Send, {Tab 2}{Enter}
     }
+Return
 }
 
 ShowF3() {
@@ -70,6 +80,7 @@ ShowF3() {
         Else
             continue
     }
+Return
 }
 
 PauseOnLoad() {
@@ -86,10 +97,12 @@ PauseOnLoad() {
         Else
             continue
     } 
+Return
 }
 
 ExitWorld() {
     Send, {Esc}+{Tab}{Enter}
+Return
 }
 
 OpenToLan() {
@@ -102,19 +115,37 @@ OpenToLan() {
         Send, +{Tab}{Enter}
         Sleep 50
         Send, {Tab}{Enter}
-        While !(InStr(McTitle, "LAN"))
-            Sleep, 200 ; Decrease if you want perch and datalist to be executed faster
     }
-} 
+Return
+}
 
 Perch() {
     OpenToLan()
-    SendInput, /data merge entity @e[type=ender_dragon,limit=1] {DragonPhase:2}{Enter}
+    WaitLan(200)
+    Clipboard := "/data merge entity @e[type=ender_dragon,limit=1] {DragonPhase:2}"
+    Send, ^v{Enter}
+    Return
 }
 
 DataList() {
     OpenToLan()
-    SendInput, /datapack list{Enter}
+    WaitLan(100)
+    Clipboard := "/datapack list"
+    Send, ^v{Enter}
+    Return
+}
+
+WaitLan(miliseconds) {
+    Loop {
+        WinGetTitle, McTitle, Minecraft
+        If (InStr(McTitle, "lan")) {
+            Break
+            Return
+        }
+        Else
+            Sleep, %miliseconds%
+    }
+    Return
 }
 
 #IfWinActive, Minecraft
