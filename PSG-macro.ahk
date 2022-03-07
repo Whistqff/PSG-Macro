@@ -48,10 +48,10 @@ Reset() {
     Sleep 100
     Send, {Tab}{Enter}
     ExperimentalSettings()
-    If (pauseload)
-        PauseOnLoad()
     If (showf3)
         Showf3()
+    If (pauseload)
+        PauseOnLoad()
 Return
 }
 
@@ -85,8 +85,6 @@ Return
 }
 
 PauseOnLoad() {
-    If ShowF3()
-        Send, {Esc}
     Loop {
         Sleep 70
         WinGetTitle, McTitle, Minecraft

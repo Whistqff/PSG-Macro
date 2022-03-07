@@ -15,7 +15,7 @@ To change just scroll down to the bottom of the script and replace the hotkeys t
 1. Install [autohotkey](https://www.autohotkey.com/)
 2. Download sourcecode.zip from releases and then extract it `don't take anything out of it`
 3. In your minecraft world list search up "PSG" and if any worlds pop up delete/rename them
-4. Download [PSG MAP](https://github.com/BlockOfNetherite/PSG/releases/latest) and extract it to its own directory, then rename the folder as "PerfectWorld"
+4. Download [PSG MAP](https://github.com/BlockOfNetherite/PSG/releases/latest) and extract the PSG.zip in the same directory as the script and rename it to "PerfectWorld"
 5. Set your saves directory, oldWorlds directory and configure other macro options
 ## TroubleShooting
 Q: Why worlds aren't moving?
