@@ -1,4 +1,4 @@
-﻿; PSG MACRO by fiki, edited by Whistqff(will become obsolete when fiki fixes his version)
+; PSG MACRO by fiki, edited by Whistqff(will become obsolete when fiki fixes his version)
 ; PauseOnLoad and ShowF3 might not work on different languages
 
 global savesDir := "D:/MCSR/MultiMC/instances/1.16.1inst1/.minecraft/saves" ; Where your saves is
@@ -7,9 +7,13 @@ global showf3 := True ; If you want to display the f3 screen at the beggining of
 global pauseload := True ; If you want to pause when you load into the world
 global f3Dur := "100" ; How long f3 is shown in miliseconds
 
+IfNotExist, resets.txt
+    FileAppend, 0, resets.txt
+
 WorldCopy() {
     FileRead, worldVar, resets.txt
-    FileMoveDir, %savesDir%/PerfectWorld %worldVar%, %oldWorlds%/, 1
+    IfExist, %savesDir%/PerfectWorld %worldVar%
+        FileMoveDir, %savesDir%/PerfectWorld %worldVar%, %oldWorlds%/, 1
     worldVar += 1
     FileDelete, resets.txt
     FileAppend, %worldVar%, resets.txt
