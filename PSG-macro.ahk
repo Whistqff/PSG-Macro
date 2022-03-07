@@ -32,6 +32,7 @@ WorldCopy() {
         Else
             Break
     }
+Return
 }
 
 Reset() {
