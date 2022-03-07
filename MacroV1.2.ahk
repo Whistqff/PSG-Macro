@@ -38,6 +38,7 @@ Reset() {
     Send, {Tab}{Enter}
     Sleep 100
     Send, {Tab}{Enter}
+    ExperimentalSettings()
     If (pauseload)
         PauseOnLoad()
     If (showf3)
