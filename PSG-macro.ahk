@@ -154,4 +154,5 @@ WaitLan(miliseconds) {
     U::Reset()
     P::Perch()
     O::DataList()
+    F5::Reload
 }
