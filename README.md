@@ -1,5 +1,5 @@
 ## PSG-Macro
-Macro for the Perfect Seed Glitchless category extension
+Macro for the Perfect Seed Glitchless category extension. Download [PSG MAP](https://github.com/BlockOfNetherite/PSG/releases/ GitHub)and join the [discord](https://discord.gg/CxGBhFQ2mR)
 
 Default hotkeys:
 
