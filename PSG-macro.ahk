@@ -9,25 +9,26 @@ global showf3 := True ; If you want to display the f3 screen at the beggining of
 global pauseload := True ; If you want to pause when you load into the world
 global f3Dur := "100" ; How long f3 is shown in miliseconds
 
-IfNotExist, resets.txt
+If !(FileExist("resets.txt"))
     FileAppend, 0, resets.txt
 
-IfNotExist, %A_ScriptDir%/PerfectWorld
+If !(FileExist(A_ScriptDir "/PerfectWorld"))
     MsgBox, Please extract the PSG.zip in the same directory as this script and rename it to "PerfectWorld"
 
-IfNotExist, %oldWorlds%
+If !(FileExist(oldWorlds))
     FileCreateDir, %oldWorlds%
 
 WorldCopy() {
     FileRead, worldVar, resets.txt
-    IfExist, %savesDir%/PerfectWorld %worldVar%
-        FileMoveDir, %savesDir%/PerfectWorld %worldVar%, %oldWorlds%/, 1
+    If FileExist(savesDir "/PerfectWorld " worldVar)
+        FileMoveDir, %savesDir%/PerfectWorld %worldVar%, %oldWorlds%/, 2
     worldVar += 1
     FileDelete, resets.txt
     FileAppend, %worldVar%, resets.txt
     FileCopyDir, PerfectWorld, %savesDir%/PerfectWorld %worldVar%, 1
+    Clipboard := % "PerfectWorld " worldVar
     Loop {
-        IfNotExist, %savesDir%/PerfectWorld %worldVar%
+        If !(FileExist(savesDir "/PerfectWorld " worldVar))
             Sleep, 250 ; Increase if the worlds are corrupt when loading into them
         Else
             Break
@@ -42,7 +43,7 @@ Reset() {
     WorldCopy()
     Send, {Tab}{Enter}
     Sleep 300
-    Send, psg
+    Send, ^v
     Sleep 100
     Send, {Tab}{Enter}
     Sleep 100
