@@ -5,40 +5,58 @@
 
 global savesDir := "D:/MCSR/MultiMC/instances/1.16.1inst1/.minecraft/saves" ; Where your saves is
 global oldWorlds := "D:/OldWorlds/PSG" ; Where old worlds will be placed
-global showf3 := True ; If you want to display the f3 screen at the beggining of each run
+global showf3 := True ; If you want to display the f3 screen at the beginning of each run
 global pauseload := True ; If you want to pause when you load into the world
 global f3Dur := "100" ; How long f3 is shown in miliseconds
 
 If !(FileExist("resets.txt"))
     FileAppend, 0, resets.txt
 
-If !(FileExist(A_ScriptDir "/PerfectWorld"))
+If !(FileExist(A_ScriptDir . "/PerfectWorld"))
     MsgBox, Please extract the PSG.zip in the same directory as this script and rename it to "PerfectWorld"
 
 If !(FileExist(oldWorlds))
     FileCreateDir, %oldWorlds%
 
 WorldCopy() {
+    Loop, Files, %savesDir%/*
+    {
+        If (InStr(A_LoopFileName, "Speedrun #") && !HasEnterEnd(A_LoopFilePath))
+            FileMoveDir, %A_LoopFilePath%, %oldWorlds% %A_Now%
+    }
     FileRead, worldVar, resets.txt
-    If FileExist(savesDir "/PerfectWorld " worldVar)
-        FileMoveDir, %savesDir%/PerfectWorld %worldVar%, %oldWorlds%/, 2
+    If (ErrorLevel)
+        worldVar := 0
     worldVar += 1
     FileDelete, resets.txt
     FileAppend, %worldVar%, resets.txt
-    FileCopyDir, PerfectWorld, %savesDir%/PerfectWorld %worldVar%, 1
-    Clipboard := % "PerfectWorld " worldVar
-    Loop {
-        If !(FileExist(savesDir "/PerfectWorld " worldVar))
-            Sleep, 250 ; Increase if the worlds are corrupt when loading into them
-        Else
-            Break
+    FileCopyDir, PerfectWorld, %savesDir%/PerfectSpeedrun #%worldVar%, 1
+    Clipboard := "PerfectWorld " . worldVar
+    While !(FileExist(savesDir . "/PerfectSpeedrun #" . worldVar)) {
+        ; do nothing
     }
 Return
 }
 
+HasEnteredEnd(world) {
+    Loop, Files, %world%/advancements/*.json
+    {
+        AdvFile := A_LoopFileName
+    }
+    Loop, Read, %world%/advancements/%AdvFile%
+    {
+        If (InStr(A_LoopReadLine, "enter_the_end")) {
+            FileReadLine, IsDone, %world%/advancements/%AdvFile%, A_Index + 4
+            If (InStr(IsDone, """done"": true"))
+                Return True
+        }
+    }
+    Return False
+}
+
 Reset() {
     WinGetTitle, McVar, Minecraft
-    If (InStr(McVar, "player"))
+    If (InStr(McVar, " - "))
         ExitWorld()
     WorldCopy()
     Send, {Tab}{Enter}
@@ -57,13 +75,11 @@ Return
 }
 
 ExperimentalSettings() {
-    Loop {
-        Sleep 70
-        WinGetTitle, McTitle, Minecraft
-        If InStr(McTitle, "player")
-            break
-        Else
-            Send, {Tab 2}{Enter}
+    WinGetTitle, McVar, Minecraft*
+    While !(InStr(McVar, " - ")) {
+        Sleep, 70
+        Send, {Tab 2}{Enter}
+        WinGetTitle, McVar
     }
 Return
 }
@@ -72,7 +88,7 @@ ShowF3() {
     Loop {
         Sleep 70
         WinGetTitle, McTitle, Minecraft
-        If InStr(McTitle, "player") { 
+        If InStr(McTitle, " - ") { 
             Sleep 70
             Send, {F3}
             Sleep %f3Dur%
@@ -89,7 +105,7 @@ PauseOnLoad() {
     Loop {
         Sleep 70
         WinGetTitle, McTitle, Minecraft
-        If InStr(McTitle, "player") {
+        If InStr(McTitle, " - ") {
             Sleep 70
             Send, {Esc}
             break
@@ -107,7 +123,7 @@ Return
 
 OpenToLan() {
     WinGetTitle, McTitle, Minecraft
-    If InStr(McTitle, "player") {
+    If InStr(McTitle, " - ") {
         Send, {Esc}
         Sleep 50
         Send, +{Tab 3}{Enter}
