@@ -3,11 +3,18 @@
 #NoEnv
 #SingleInstance, Force
 
+; Directories
 global savesDir := "D:/MCSR/MultiMC/instances/1.16.1inst1/.minecraft/saves" ; Where your saves is
 global oldWorlds := "D:/OldWorlds/PSG" ; Where old worlds will be placed
-global showf3 := True ; If you want to display the f3 screen at the beginning of each run
+; Options
+global showf3 := True ; If you want to display the f3 screen at the beggining of each run
 global pauseload := True ; If you want to pause when you load into the world
-global f3Dur := "100" ; How long f3 is shown in miliseconds
+global settingsreset := True ; If you want to change render distance after going into a world
+global fovreset := True ; if you wanna reset your fov after going into the world
+; Values, for settings reset set to 0 to not reset those settings.
+global fov := 45 ; Set this to your fov, 110 == Quake pro
+global renderDist := 8 ; Set to your desired render distance
+global f3Dur := 100 ; How long f3 is shown in miliseconds
 
 If !(FileExist("resets.txt"))
     FileAppend, 0, resets.txt
@@ -21,7 +28,7 @@ If !(FileExist(oldWorlds))
 WorldCopy() {
     Loop, Files, %savesDir%/*
     {
-        If (InStr(A_LoopFileName, "Speedrun #") && !HasEnterEnd(A_LoopFilePath))
+        If (InStr(A_LoopFileName, "Speedrun #") && !HasEnteredEnd(A_LoopFilePath))
             FileMoveDir, %A_LoopFilePath%, %oldWorlds% %A_Now%
     }
     FileRead, worldVar, resets.txt
@@ -117,6 +124,7 @@ Return
 }
 
 ExitWorld() {
+    ResetSettings(fov, renderDist)
     Send, {Esc}+{Tab}{Enter}
 Return
 }
@@ -153,6 +161,17 @@ DataList() {
     Sleep, 70
     Send, ^v{Enter}
     Return
+}
+
+ResetSettings(fov, rd) {
+    If (rd) {
+        RDPresses := rd - 2
+        Send, {F3 down}{rshift down}{f 32}{rshift up}{f %RDPresses%}d{F3 up}
+    }
+    If (fov) {
+        FovPresses := Ceil((FOV-30)*1.763)
+        Send, {Esc}{Tab 6}{enter}{Tab}{Left 151}{Right %FOVPresses%}{Esc 2}
+    }
 }
 
 WaitLan(miliseconds) {
